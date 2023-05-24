@@ -9,7 +9,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -20,7 +23,7 @@ public class UserRepositoryTest {
 
     @Test
     public void testNew(){
-        User user = new User("varun@gmail.com","varunbhau","varun","dude");
+        User user = new User("varu12n@gmail.com","varunbhau","varun","dude");
 
         User newuser = repo.save(user);
         Assertions.assertNotNull(newuser);
@@ -35,4 +38,6 @@ public class UserRepositoryTest {
             System.out.println(user);
         }
     }
+
+
 }

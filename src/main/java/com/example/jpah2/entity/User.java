@@ -2,6 +2,8 @@ package com.example.jpah2.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -22,6 +24,8 @@ public class User {
     private String lastName;
 
     private boolean enabled;
+
+    private Date creationDate = new Date();
 
     public Integer getId() {
         return id;

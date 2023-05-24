@@ -6,6 +6,8 @@ import com.example.jpah2.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,11 @@ public class UserService {
 
     public List<User> listall(){
         List<User> users = (List<User>) repo.findAll();
+        return users;
+    }
+
+    public List<User> filterList(Date startDate, Date endDate, String keyword){
+        List<User> users = (List<User>) repo.findByCreationDateBetweenAndFirstNameContaining(startDate, endDate, keyword);
         return users;
     }
 
