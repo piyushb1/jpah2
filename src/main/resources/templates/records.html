@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users</title>
+
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap-date-picker/css/bootstrap-date-picker.css}"/>
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap-date-picker/css/bootstrap-date-picker.standalone.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{webjars/font-awesome/5.11.2/css/all.css} "/>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"  />
+</head>
+<body>
+<div class="container-fluid text-center">
+    <div><h2>Manage Records</h2></div>
+
+    <form action="#" th:action="@{/records/filter}" method="post">
+        <input type="text" name="keyword" />
+        <input type="date" name="startDate" />
+        <input type="date" name="endDate" />
+        <button type="submit">Filter</button>
+    </form>
+
+    <div class="m-2">
+        <a class="h3" th:href="@{/records/new}">Add New Record</a>
+    </div>
+    <div>
+        <a class="h3" th:href="@{/records/export/excel}">Export to Excel</a>
+    </div>
+
+    <div th:if="${message}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+
+
+    <div>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>Bill no</th>
+                <th>Bank</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="user : ${listUsers}">
+                <tr>
+                    <td>[[${user.billno}]]</td>
+                    <td>[[${user.bank}]]</td>
+                    <td>[[${user.descr}]]</td>
+                    <td>[[${user.amount}]]</td>
+                    <td>[[${user.billdate}]]</td>
+                    <td>
+                        <a class="h4 mr-3" th:href="@{'/records/edit/' + ${user.id}}">Edit</a>
+                        <a class="h4" th:href="@{'/records/delete/' + ${user.id}}">Delete</a>
+                    </td>
+                </tr>
+            </th:block>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{assets/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+
+<script>
+    $('.input-group.date').datepicker({
+        autoclose: true,
+        todayHighlight: true
+    });
+</script>
+</body>
+</html>
