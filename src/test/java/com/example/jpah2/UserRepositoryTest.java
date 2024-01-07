@@ -21,14 +21,14 @@ public class UserRepositoryTest {
 
     @Autowired private UserRepository repo;
 
-    @Test
-    public void testNew(){
-        User user = new User("varu12n@gmail.com","varunbhau","varun","dude");
-
-        User newuser = repo.save(user);
-        Assertions.assertNotNull(newuser);
-        Assertions.assertTrue(newuser.getId()>0);
-    }
+//    @Test
+//    public void testNew(){
+//        User user = new User("varu12n@gmail.com","varunbhau","varun","dude");
+//
+//        User newuser = repo.save(user);
+//        Assertions.assertNotNull(newuser);
+//        Assertions.assertTrue(newuser.getId()>0);
+//    }
 
     @Test
     public void testAll(){

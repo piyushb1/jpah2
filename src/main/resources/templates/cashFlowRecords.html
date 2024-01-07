@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Manage Cash Flow Records</title>
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+
+<body>
+	<div class="container-fluid text-center">
+		<!-- Header Section -->
+		<div class="header">
+			<div class="float-left">
+				<a class="button" th:href="@{/records}">Manage Records</a>
+				<div class="separator"></div>
+				<a class="button" th:href="@{/records/new}">Add New Record</a>
+				<div class="separator"></div>
+				<a class="button" th:href="@{/cash-flow-records}">Manage Cash Flow Records</a>
+			</div>
+		</div>
+
+		<!-- Cash Flow Records Table -->
+		<div>
+			<h2>Cash Flow Records</h2>
+			<table class="table table-bordered">
+				<thead class="thead-dark">
+					<tr>
+						<th>ID</th>
+						<th>Type</th>
+						<th>Amount</th>
+						<th>Source</th>
+						<th>Description</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="cashFlowRecord : ${cashFlowRecords}">
+						<td th:text="${cashFlowRecord.id}"></td>
+						<td th:text="${cashFlowRecord.transactionType}"></td>
+						<td th:text="${cashFlowRecord.amount}"></td>
+						<td th:text="${cashFlowRecord.source}"></td>
+						<td th:text="${cashFlowRecord.description}"></td>
+						<td th:text="${cashFlowRecord.transactionDate}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- Add Cash Flow Record Form -->
+		<div>
+			<h2>Add Cash Flow Record</h2>
+			<form action="/cash-flow-records" method="post" class="search-form">
+				<label>Type:</label>
+				<select name="transactionType">
+					<option value="Credit">Credit</option>
+					<option value="Debit">Debit</option>
+				</select>
+				<label>Amount:</label>
+				<input type="text" name="amount" required />
+				<label>Source:</label>
+				<input type="text" name="source" required />
+				<label>Description:</label>
+				<input type="text" name="description" required />
+				<label>Date:</label>
+				<input type="date" name="transactionDate" required />
+				<button type="submit">Add Record</button>
+			</form>
+		</div>
+
+	</div>
+
+	<!-- Scripts -->
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+<style>
+	/* Global Styles */
+	body {
+		font-family: 'Arial', sans-serif;
+		background-color: #f7f9fb;
+		color: #333;
+		margin: 20px;
+		padding: 20px;
+	}
+
+	/* Header Styles */
+	.header {
+		background-color: #3498db;
+		padding: 10px;
+		color: white;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-radius: 5px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	}
+
+	.float-left {
+		display: flex;
+	}
+
+	.float-left .button {
+		margin-right: 10px;
+		text-decoration: none;
+		color: white;
+		position: relative;
+	}
+
+	.float-left .separator {
+		width: 2px;
+		height: 20px;
+		background-color: white;
+		margin-right: 10px;
+	}
+
+	.float-right .export-button {
+		background-color: #2ecc71;
+		color: white;
+		border: none;
+		padding: 10px 20px;
+		text-align: center;
+		text-decoration: none;
+		font-size: 16px;
+		cursor: pointer;
+		border-radius: 5px;
+	}
+
+	/* Search Form Styles */
+	.search-form {
+		max-width: 100%;
+		margin: 20px auto;
+		background-color: #fff;
+		padding: 15px;
+		border-radius: 5px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	label {
+		display: block;
+		margin-top: 10px;
+	}
+
+	input,
+	button {
+		flex: 1;
+		padding: 10px;
+		box-sizing: border-box;
+		margin: 5px;
+	}
+
+	button {
+		background-color: #2ecc71;
+		color: white;
+		border: none;
+		padding: 10px 20px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		cursor: pointer;
+		border-radius: 5px;
+	}
+
+	/* Table Styles */
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-top: 20px;
+	}
+
+	th,
+	td {
+		padding: 12px;
+		text-align: left;
+		border-bottom: 1px solid #ddd;
+	}
+
+	th {
+		background-color: blue;
+		color: black;
+	}
+
+	td {
+		background-color: #ecf0f1;
+	}
+
+	tr:hover {
+		background-color: #d5e8f1;
+	}
+
+	/* Alert Styles */
+	.alert {
+		background-color: #2ecc71;
+		color: white;
+		padding: 10px;
+		border-radius: 5px;
+		margin-top: 20px;
+	}
+</style>
+
+</html>

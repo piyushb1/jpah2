@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class TransacController {
@@ -36,24 +37,40 @@ public class TransacController {
     @GetMapping("/records")
     public String showUsers(Model model){
         List<Transaction> list = transacService.listall();
-        model.addAttribute("listUsers",list);
+        model.addAttribute("transactions",list);
         System.out.println(list);
         return "records";
     }
 
     @PostMapping("/records/filter")
-    public String filterUsersByDateRange(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                         @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-                                         @RequestParam("keyword") String keyword,
-                                         Model model) {
-        Date start = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date end = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        List<Transaction> list = transacService.filterList(start, end, keyword);
-        model.addAttribute("listUsers",list);
-        System.out.println(list);
-        System.out.println(keyword+" "+start+" "+end);
-        return "records";
-    }
+	public String showTransactions(@RequestParam(name = "query", required = false, defaultValue = "") String query,
+			@RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+			Model model) {
+		List<Transaction> transactions;
+
+		if (query.isEmpty() && startDate == null && endDate == null) {
+			// If no filters are provided, get all transactions
+			transactions = transacService.getAllTransactions();
+		} else if (startDate == null && endDate == null) {
+			transactions = transacService.searchTransactions(query);
+		} else {
+			// Use the provided filters to search for transactions
+			transactions = transacService.searchTransactionsWithDate(query, startDate, endDate);
+		}
+
+	    // Add the list of transaction IDs to the model
+//	    List<Long> transactionIds = transactions.stream()
+//	            .map(Transaction::getId)
+//	            .collect(Collectors.toList());
+//	    model.addAttribute("transactionIds", transactionIds);
+
+		model.addAttribute("transactions", transactions);
+	    model.addAttribute("query", query);
+	    model.addAttribute("startDate", startDate);
+	    model.addAttribute("endDate", endDate);
+		return "records";
+	}
 
     @GetMapping("/records/new")
     public String newuser(Model model){
@@ -105,6 +122,35 @@ public class TransacController {
         List<Transaction> listUsers = transacService.listall();
 
         TransactionExporter excelExporter = new TransactionExporter(listUsers);
+
+        excelExporter.export(response);
+    }
+    
+    @GetMapping("/records/export/")
+    public void exportSearchToExcel(@RequestParam(name = "query", required = false, defaultValue = "") String query,
+			@RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+			HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("ddMMyyyy_HHmmss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=records_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<Transaction> transactions;
+        if (query.isEmpty() && startDate == null && endDate == null) {
+			// If no filters are provided, get all transactions
+			transactions = transacService.getAllTransactions();
+		} else if (startDate == null && endDate == null) {
+			transactions = transacService.searchTransactions(query);
+		} else {
+			// Use the provided filters to search for transactions
+			transactions = transacService.searchTransactionsWithDate(query, startDate, endDate);
+		}
+
+        TransactionExporter excelExporter = new TransactionExporter(transactions);
 
         excelExporter.export(response);
     }
